@@ -1,16 +1,26 @@
 #!/usr/bin/env node
 
-import * as program from 'commander';
+import {Command} from "commander";
 
-import { instance as main } from '../index';
+const program = new Command();
+
+import {instance as main} from "../index";
 
 async function run() {
-  program
-    .parse(process.argv);
+    program
+        .name("thumbnailfetcher")
+        .description("command line tool to fetch thumbnail images based on VuFinds API input")
+        .version("0.0.1");
+    program.command("fetch")
+        .description("Fetch thumbnail images for a configured vufind query set")
+        .argument("<string>", "Name of the query set")
+        .action((str: string) => {
+            main.fetch(str);
+        });
+    program.parse();
 
-  main.run();
 }
 
 run().catch((e) => {
-  console.log('Error', e);
+    console.log("Error", e);
 });

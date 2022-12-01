@@ -1,12 +1,6 @@
-# ts-boilerplate
+# VuFindThumbnailFetcher
 
-Minimal boilerplate for typescript projects.
-
-Cloning:
-
-```bash
-git clone git@github.com:ivpusic/ts-boilerplate.git
-```
+command line tool to fetch thumbnail images based on VuFinds API input
 
 Commands:
 
