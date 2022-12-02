@@ -15,7 +15,8 @@ export class Main {
     console.log(`Processing set "${set}"`);
     const setdef: ISetDef = sources()[set];
     const setlist = await this.fetchPages(setdef);
-    const filelist = this.getFileList(setdef.target);
+    const createdlist = this.fetchImages(setdef, setlist);
+    console.log(createdlist);
   }
 
   /**
@@ -33,6 +34,36 @@ export class Main {
       i--;
     }
     return(resultSet);
+  }
+
+  private fetchImages = async (setdef: ISetDef, setlist: Array<Record<any, any>>): Promise<string[]> => {
+    const fetched = [];
+    let i = setlist.length - 1;
+    while (i > -1) {
+      const params = { };
+      const identifier = this.getDescendantProp(setlist[i], setdef.mdsource.identifierpath);
+      Object.keys(setdef.imgsource.parameters).forEach((key) => {
+        params[key] = this.interpolateTemplateString(setlist[i], setdef.imgsource.parameters[key]);
+      });
+      console.log(params);
+      const response = await axios.get(setdef.imgsource.baseurl, { params, responseType: "blob"});
+      // TODO: check if response header indicates an actual image before writing
+      fs.writeFileSync(`${setdef.target}${identifier}.jpg`, response.data);
+      console.log(`image ${identifier}.jpg written - ${i} images left`);
+      fetched.push(identifier);
+      i--;
+    }
+    return fetched;
+  }
+
+  private checkImage = (path: string, id: string): boolean => {
+    try {
+      if (fs.existsSync(`${path}/${id}.jpg`)) {
+        return true;
+      }
+    } catch (err) {
+      return false;
+    }
   }
 
   /**

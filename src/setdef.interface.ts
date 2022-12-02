@@ -8,6 +8,7 @@ export interface ISetDef extends Record<string, any> {
         };
         rescountpath: string;
         recsetpath: string;
+        identifierpath: string;
     };
     imgsource: {
         baseurl: string;
