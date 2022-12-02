@@ -1,15 +1,17 @@
 export interface ISetDef extends Record<string, any> {
-    vufind: {
+    mdsource: {
         baseurl: string;
         parameters: {
             "field[]": string[];
             "filter[]": string[];
             limit: number;
         };
+        rescountpath: string;
+        recsetpath: string;
     };
-    images: {
+    imgsource: {
         baseurl: string;
-        parameters: Record<string, string[]>;
+        parameters: Record<string, any>;
     };
     target: string;
 }
