@@ -4,6 +4,10 @@ import axios from "axios";
 import * as fs from "fs";
 
 export class Main {
+  /**
+   * checks setlist against files in target folder and downloads missing ones
+   * @param set
+   */
   public fetch = async (set: string) => {
     if (!sources()[set]) {
       console.error(`Set "${set}" is not defined.`);
@@ -15,6 +19,10 @@ export class Main {
     console.log(setlist, filelist);
   }
 
+  /**
+   * gets setlist from solr
+   * @param setdef
+   */
   private fetchPages = async (setdef: ISetDef): Promise<Array<Record<any, any>>> => {
     const initial = await axios.get(setdef.vufind.baseurl, { params: setdef.vufind.parameters});
     const resultSet: Array<Record<any, any>> = [];
@@ -28,7 +36,11 @@ export class Main {
     return(resultSet);
   }
 
-  private getFileList = async (path: string): Promise<string[]> => {
+  /**
+   * compile list of files in target directory
+   * @param path
+   */
+  private getFileList = (path: string): string[] => {
     const filelist: string[] = [];
     try {
       filelist.push(...fs.readdirSync(path));
