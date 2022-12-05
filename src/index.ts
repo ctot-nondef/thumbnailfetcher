@@ -45,15 +45,24 @@ export class Main {
       Object.keys(setdef.imgsource.parameters).forEach((key) => {
         params[key] = this.interpolateTemplateString(setlist[i], setdef.imgsource.parameters[key]);
       });
-      console.log(params);
-      const response = await axios.get(setdef.imgsource.baseurl, { params,  responseType: "text", responseEncoding: "base64"});
-      // TODO: make this dynamic for other image types
-      if (response.headers["content-type"] === "image/jpeg") {
-        console.log(response.data);
-        fs.writeFileSync(`${setdef.target}${identifier}.jpeg`, response.data, {encoding: "base64"});
-        console.log(`image ${identifier}.jpg written - ${i} images left`);
-        fetched.push(identifier);
-      } else { console.log(`image ${identifier}.jpg not found - ${i} images left`); }
+      // console.log(params);
+      if ( !this.checkImage(setdef.target, identifier )) {
+        const response = await axios.get(setdef.imgsource.baseurl, {
+          params,
+          responseType: "text",
+          responseEncoding: "base64",
+        });
+        // TODO: make this dynamic for other image types
+        if (response.headers["content-type"] === "image/jpeg") {
+          fs.writeFileSync(`${setdef.target}/${identifier}.jpg`, response.data, {encoding: "base64"});
+          console.log(`image ${identifier}.jpg written - ${i} images left`);
+          fetched.push(identifier);
+        } else {
+          console.log(`image ${identifier}.jpg not found - ${i} images left`);
+        }
+      } else {
+        console.log(`image ${identifier}.jpg already present - ${i} images left`);
+      }
       i--;
     }
     return fetched;
@@ -61,7 +70,7 @@ export class Main {
 
   private checkImage = (path: string, id: string): boolean => {
     try {
-      if (fs.existsSync(`${path}/${id}.jpg`)) {
+      if (fs.existsSync(`${path}/${id}.jpg`) || fs.existsSync(`${path}/${id}.jpeg`)) {
         return true;
       }
     } catch (err) {

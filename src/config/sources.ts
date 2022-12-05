@@ -22,6 +22,6 @@ export default () => ({
                 value: "${rawData['is_hierarchy_id']}.tif",
             },
         },
-        target: "/opt/thumbnails/",
+        target: "/opt/thumbnails",
     },
 });
