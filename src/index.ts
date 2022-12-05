@@ -99,6 +99,11 @@ export class Main {
     return fetched;
   }
 
+  /**
+   * checks in a defined path if a thumbnail for a given identifier exists
+   * @param path
+   * @param id
+   */
   private checkImage = (path: string, id: string): boolean => {
     try {
       if (fs.existsSync(`${path}/${id}.jpg`) || fs.existsSync(`${path}/${id}.jpeg`)) {
