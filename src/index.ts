@@ -12,7 +12,7 @@ export class Main {
    */
   public fetch = async (set: string): Promise<string[]> => {
     const setdef: ISetDef = await this.getSetDef(set);
-    const setlist = await this.fetchPages(setdef);
+    const setlist = await this.fetchPages(setdef.mdsource);
     return await this.fetchImages(setdef, setlist);
   }
 
@@ -22,7 +22,7 @@ export class Main {
    */
   public check = async (set: string): Promise<string[]> => {
     const setdef: ISetDef = await this.getSetDef(set);
-    const setlist = await this.fetchPages(setdef);
+    const setlist = await this.fetchPages(setdef.mdsource);
     const misslist = [];
     let i = setlist.length - 1;
     while (i > -1) {
@@ -73,25 +73,21 @@ export class Main {
     const fetched = [];
     let i = setlist.length - 1;
     while (i > -1) {
-      const params = { };
       const identifier = this.getDescendantProp(setlist[i], setdef.mdsource.identifierpath);
-      Object.keys(setdef.imgsource.parameters).forEach((key) => {
-        params[key] = this.interpolateTemplateString(setlist[i], setdef.imgsource.parameters[key]);
-      });
-      // console.log(params);
       if ( !this.checkImage(setdef.target, identifier )) {
-        const response = await axios.get(setdef.imgsource.baseurl, {
-          params,
-          responseType: "text",
-          responseEncoding: "base64",
-        });
-        // TODO: make this dynamic for other image types
-        if (response.headers["content-type"] === "image/jpeg") {
-          fs.writeFileSync(`${setdef.target}/${identifier}.jpg`, response.data, {encoding: "base64"});
-          console.log(`image ${identifier}.jpg written - ${i} images left`);
-          fetched.push(identifier);
-        } else {
-          console.log(`image for identifier ${identifier} not found - ${i} identifiers left to check`);
+        let s = setdef.imgsource.length - 1;
+        while (s > -1) {
+          const res = await this.checkImageSource(setdef.imgsource[s], setlist[i]);
+          if (res.data) {
+            fs.writeFileSync(`${setdef.target}/${identifier}.jpg`, res.data, {encoding: "base64"});
+            console.log(`image for identifier ${identifier} written - ${i} identifiers left to check`);
+            fetched.push(identifier);
+            break;
+          }
+          if (s === 0) {
+            console.log(`image for identifier ${identifier} not found - ${i} identifiers left to check`);
+          }
+          s--;
         }
       } else {
         console.log(`image for identifier ${identifier} already present - ${i} identifiers left to check`);
@@ -99,6 +95,28 @@ export class Main {
       i--;
     }
     return fetched;
+  }
+
+  private checkImageSource = async (imgsource: IImgsource, setitem: Record<any, any>): Promise<any> => {
+    const params = {};
+    Object.keys(imgsource.parameters).forEach((key) => {
+      params[key] = this.interpolateTemplateString(setitem, imgsource.parameters[key]);
+    });
+    try {
+      const response = await axios.get(imgsource.baseurl, {
+        params,
+        headers: {
+          Accept: imgsource.expectedtype,
+        },
+        responseType: "text",
+        responseEncoding: "base64",
+      });
+      if (response.headers["content-type"] === imgsource.expectedtype) {
+        return response;
+      } else { return false; }
+    } catch (err) {
+      return false;
+    }
   }
 
   /**
