@@ -1,5 +1,7 @@
 import { default as sources } from "./config/sources";
 import { ISetDef } from "./setdef.interface";
+import {IImgsource} from "./imgsource.interface";
+import {IMdsource} from "./mdsource.interface";
 import axios from "axios";
 import * as fs from "fs";
 
@@ -52,14 +54,14 @@ export class Main {
 
   /**
    * gets setlist from solr
-   * @param setdef
+   * @param mdsource
    */
-  private fetchPages = async (setdef: ISetDef): Promise<Array<Record<any, any>>> => {
-    const initial = await axios.get(setdef.mdsource.baseurl, { params: setdef.mdsource.parameters});
+  private fetchPages = async (mdsource: IMdsource): Promise<Array<Record<any, any>>> => {
+    const initial = await axios.get(mdsource.baseurl, { params: mdsource.parameters});
     const resultSet: Array<Record<any, any>> = [];
-    let i: number = Math.floor( this.getDescendantProp(initial.data, setdef.mdsource.rescountpath) / setdef.mdsource.parameters.limit);
+    let i: number = Math.floor( this.getDescendantProp(initial.data, mdsource.rescountpath) / mdsource.parameters.limit);
     while ( i > 0) {
-      const page = await axios.get(setdef.mdsource.baseurl, { params: { ...setdef.mdsource.parameters, page: i } });
+      const page = await axios.get(mdsource.baseurl, { params: { ...mdsource.parameters, page: i } });
       console.log(`${i} pages left.`);
       resultSet.push(...page.data.records);
       i--;
