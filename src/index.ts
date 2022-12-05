@@ -97,6 +97,11 @@ export class Main {
     return fetched;
   }
 
+  /**
+   * http request wrapper parsing dynamic parameters from imgsource config according to a specific query item
+   * @param imgsource
+   * @param setitem
+   */
   private checkImageSource = async (imgsource: IImgsource, setitem: Record<any, any>): Promise<any> => {
     const params = {};
     Object.keys(imgsource.parameters).forEach((key) => {
