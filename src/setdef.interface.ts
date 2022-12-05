@@ -1,18 +1,7 @@
+import {IMdsource} from "./mdsource.interface";
+import {IImgsource} from "./imgsource.interface";
 export interface ISetDef extends Record<string, any> {
-    mdsource: {
-        baseurl: string;
-        parameters: {
-            "field[]": string[];
-            "filter[]": string[];
-            limit: number;
-        };
-        rescountpath: string;
-        recsetpath: string;
-        identifierpath: string;
-    };
-    imgsource: {
-        baseurl: string;
-        parameters: Record<string, any>;
-    };
+    mdsource: IMdsource;
+    imgsource: IImgsource[];
     target: string;
 }

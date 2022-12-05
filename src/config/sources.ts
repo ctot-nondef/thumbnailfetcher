@@ -11,7 +11,7 @@ export default () => ({
             recsetpath: "records",
             identifierpath: "id",
         },
-        imgsource: {
+        imgsource: [{
             baseurl: "https://opacbasis.acdh.oeaw.ac.at/wwwopac.ashx?",
             parameters: {
                 command: "getcontent",
@@ -21,7 +21,7 @@ export default () => ({
                 height: 500,
                 value: "${rawData['is_hierarchy_id']}.tif",
             },
-        },
+        }],
         target: "/opt/thumbnails",
     },
 });
