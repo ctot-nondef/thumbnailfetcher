@@ -9,21 +9,17 @@ export class Main {
    * @param set
    */
   public fetch = async (set: string): Promise<string[]> => {
-    if (!sources()[set]) {
-      console.error(`Set "${set}" is not defined.`);
-    }
-    console.log(`Processing set "${set}"`);
-    const setdef: ISetDef = sources()[set];
+    const setdef: ISetDef = await this.getSetDef(set);
     const setlist = await this.fetchPages(setdef);
     return await this.fetchImages(setdef, setlist);
   }
 
+  /**
+   * checks setlist agains files in target folder and outputs missing ones
+   * @param set
+   */
   public check = async (set: string): Promise<string[]> => {
-    if (!sources()[set]) {
-      console.error(`Set "${set}" is not defined.`);
-    }
-    console.log(`Processing set "${set}"`);
-    const setdef: ISetDef = sources()[set];
+    const setdef: ISetDef = await this.getSetDef(set);
     const setlist = await this.fetchPages(setdef);
     const misslist = [];
     let i = setlist.length - 1;
@@ -35,6 +31,23 @@ export class Main {
       i--;
     }
     return misslist;
+  }
+
+  /**
+   * fetches a queryset definition either as defined in the config files
+   * @param set
+   */
+  private getSetDef = async (set: string): Promise<ISetDef> => {
+    let setdef: ISetDef;
+    if (!sources()[set]) {
+      try {
+        setdef = await axios.get(set, { headers: { Accept: "application/json" } });
+      } catch (err) {
+        console.log(`"${err.input}" was neither a valid set reference nor a valid URL!`);
+        throw err;
+      }
+    } else { setdef = sources()[set]; }
+    return setdef;
   }
 
   /**
