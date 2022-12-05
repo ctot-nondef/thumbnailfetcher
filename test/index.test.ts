@@ -1,8 +1,8 @@
-import { assert } from 'chai';
+import { assert } from "chai";
 
-describe('test', () => {
+describe("test", () => {
 
-  it('passes', async () => {
+  it("passes", async () => {
     assert.equal(1, 1);
   });
 });

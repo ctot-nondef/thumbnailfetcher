@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
+    "postbuild": "cp package*.json dist && cd dist && npm ci --production",
     "test": "mocha --exit --require ts-node/register test/*.ts",
     "bin": "npm run build && node dist/bin/index.js"
   },

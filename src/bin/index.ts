@@ -9,19 +9,21 @@ import {instance as main} from "../index";
 async function run() {
     program
         .name("thumbnailfetcher")
-        .description("command line tool to fetch thumbnail images based on VuFinds API input")
+        .description("command line tool to fetch thumbnail images based on API input")
         .version("0.0.1");
     program.command("fetch")
         .description("Fetch thumbnail images for a configured vufind query set")
-        .argument("<string>", "Name of the query set")
-        .action(async (str: string) => {
-            console.log(await main.fetch(str));
+        .argument("<configpath>", "Location of the configuration")
+        .argument("<setname>", "Name of the query set")
+        .action(async (configpath: string, set: string) => {
+            console.log(await main.fetch(set, configpath));
         });
     program.command("check")
-        .description("Check if all thumbnails are missing for the specified query set.")
-        .argument("<string>", "Name of the query set")
-        .action(async (str: string) => {
-            console.log(await main.check(str));
+        .description("Check if thumbnails are missing for the specified query set.")
+        .argument("<configpath>", "Location of the configuration")
+        .argument("<setname>", "Name of the query set")
+        .action(async (configpath: string, set: string) => {
+            console.log(await main.check(set, configpath));
         });
     program.parse();
 

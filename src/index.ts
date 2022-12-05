@@ -1,4 +1,3 @@
-import { default as sources } from "./config/sources";
 import { ISetDef } from "./setdef.interface";
 import {IImgsource} from "./imgsource.interface";
 import {IMdsource} from "./mdsource.interface";
@@ -9,19 +8,21 @@ export class Main {
   /**
    * checks setlist against files in target folder and downloads missing ones
    * @param set
+   * @param configpath
    */
-  public fetch = async (set: string): Promise<string[]> => {
-    const setdef: ISetDef = await this.getSetDef(set);
+  public fetch = async (set: string, configpath: string): Promise<string[]> => {
+    const setdef: ISetDef = await this.getSetDef(set, configpath);
     const setlist = await this.fetchPages(setdef.mdsource);
     return await this.fetchImages(setdef, setlist);
   }
 
   /**
-   * checks setlist agains files in target folder and outputs missing ones
+   * checks setlist agains files in target folder and outputs an array of missing ones
    * @param set
+   * @param configpath
    */
-  public check = async (set: string): Promise<string[]> => {
-    const setdef: ISetDef = await this.getSetDef(set);
+  public check = async (set: string, configpath: string): Promise<string[]> => {
+    const setdef: ISetDef = await this.getSetDef(set, configpath);
     const setlist = await this.fetchPages(setdef.mdsource);
     const misslist = [];
     let i = setlist.length - 1;
@@ -38,17 +39,24 @@ export class Main {
   /**
    * fetches a queryset definition either as defined in the config files
    * @param set
+   * @param configpath
    */
-  private getSetDef = async (set: string): Promise<ISetDef> => {
+  private getSetDef = async (set: string, configpath: string): Promise<ISetDef> => {
     let setdef: ISetDef;
-    if (!sources()[set]) {
+    let sources = {};
+    try {
+      sources = JSON.parse(fs.readFileSync(configpath, "utf8"));
+    } catch (err) {
+      console.log(`No valid config json found @ ${configpath}`);
+    }
+    if (!sources[set]) {
       try {
         setdef = await axios.get(set, { headers: { Accept: "application/json" } });
       } catch (err) {
         console.log(`"${err.input}" was neither a valid set reference nor a valid URL!`);
         throw err;
       }
-    } else { setdef = sources()[set]; }
+    } else { setdef = sources[set]; }
     return setdef;
   }
 
@@ -69,6 +77,12 @@ export class Main {
     return(resultSet);
   }
 
+  /**
+   * runs through a retrieved query set, checks if a thumbnail is already present and tries all sources
+   * provided if it isn't. Returns a list of retrieved images;
+   * @param setdef
+   * @param setlist
+   */
   private fetchImages = async (setdef: ISetDef, setlist: Array<Record<any, any>>): Promise<string[]> => {
     const fetched = [];
     let i = setlist.length - 1;
