@@ -8,15 +8,33 @@ export class Main {
    * checks setlist against files in target folder and downloads missing ones
    * @param set
    */
-  public fetch = async (set: string) => {
+  public fetch = async (set: string): Promise<string[]> => {
     if (!sources()[set]) {
       console.error(`Set "${set}" is not defined.`);
     }
     console.log(`Processing set "${set}"`);
     const setdef: ISetDef = sources()[set];
     const setlist = await this.fetchPages(setdef);
-    const createdlist = this.fetchImages(setdef, setlist);
-    console.log(createdlist);
+    return await this.fetchImages(setdef, setlist);
+  }
+
+  public check = async (set: string): Promise<string[]> => {
+    if (!sources()[set]) {
+      console.error(`Set "${set}" is not defined.`);
+    }
+    console.log(`Processing set "${set}"`);
+    const setdef: ISetDef = sources()[set];
+    const setlist = await this.fetchPages(setdef);
+    const misslist = [];
+    let i = setlist.length - 1;
+    while (i > -1) {
+      const identifier = this.getDescendantProp(setlist[i], setdef.mdsource.identifierpath);
+      if ( !this.checkImage(setdef.target, identifier )) {
+        misslist.push(identifier);
+      }
+      i--;
+    }
+    return misslist;
   }
 
   /**
@@ -58,10 +76,10 @@ export class Main {
           console.log(`image ${identifier}.jpg written - ${i} images left`);
           fetched.push(identifier);
         } else {
-          console.log(`image ${identifier}.jpg not found - ${i} images left`);
+          console.log(`image for identifier ${identifier} not found - ${i} identifiers left to check`);
         }
       } else {
-        console.log(`image ${identifier}.jpg already present - ${i} images left`);
+        console.log(`image for identifier ${identifier} already present - ${i} identifiers left to check`);
       }
       i--;
     }
@@ -79,7 +97,7 @@ export class Main {
   }
 
   /**
-   * compile list of files in target directory
+   * compile list of files in target directory, logs error if path not present, always returns an array
    * @param path
    */
   private getFileList = (path: string): string[] => {

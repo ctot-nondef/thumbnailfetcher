@@ -14,8 +14,14 @@ async function run() {
     program.command("fetch")
         .description("Fetch thumbnail images for a configured vufind query set")
         .argument("<string>", "Name of the query set")
-        .action((str: string) => {
-            main.fetch(str);
+        .action(async (str: string) => {
+            console.log(await main.fetch(str));
+        });
+    program.command("check")
+        .description("Check if all thumbnails are missing for the specified query set.")
+        .argument("<string>", "Name of the query set")
+        .action(async (str: string) => {
+            console.log(await main.check(str));
         });
     program.parse();
 
