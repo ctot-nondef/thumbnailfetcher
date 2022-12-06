@@ -67,8 +67,7 @@ export class Main {
   private fetchPages = async (mdsource: IMdsource): Promise<Array<Record<any, any>>> => {
     const initial = await axios.get(mdsource.baseurl, { params: mdsource.parameters});
     const resultSet: Array<Record<any, any>> = [];
-    let i: number = Math.floor( this.interpolateTemplateString(initial.data, mdsource.rescountpath) / mdsource.parameters.limit);
-    console.log(initial.data, mdsource.rescountpath,  this.interpolateTemplateString(initial.data, mdsource.rescountpath) );
+    let i: number = Math.floor( this.interpolateTemplateString(this.cleanObjectKeys(initial.data), mdsource.rescountpath) / mdsource.parameters.limit);
     while ( i > 0) {
       const page = await axios.get(mdsource.baseurl, { params: { ...mdsource.parameters, page: i } });
       console.log(`${i} pages left.`);
@@ -172,6 +171,16 @@ export class Main {
     const names = Object.keys(params);
     const vals = Object.values(params);
     return new Function(...names, `return \`${s}\`;`)(...vals);
+  }
+
+  private cleanObjectKeys = (obj: Record<any, any>): Record<any, any> => {
+    const res = {};
+    for (const key of Object.keys(obj)) {
+      if (typeof obj[key] === "object") {
+        res[key.replace(/[|&;$%@."<>()+,/\\:#]/g, "")] = this.cleanObjectKeys(obj[key]);
+      } else { res[key.replace(/[|&;$%@."<>()+,/\\:#]/g, "")] = obj[key]; }
+    }
+    return res;
   }
 
 }
