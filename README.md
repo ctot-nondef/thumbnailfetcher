@@ -9,8 +9,9 @@ Nodejs 18+
 ## Usage
 
 In the `/dist` folder run the tool starting any command with `node index.js <command>`
+Alternately you can run it through yarn or npm script `npm run bin <command>`
 
-```bash
+```
 Options:
   -V, --version                 output the version number
   -h, --help                    display help for command
@@ -25,12 +26,12 @@ Commands:
 
 ## Configuration
 
+Configuration can be either a path to a `json` file or a URL returning a json following this template:
+
 ```json lines
 {
-  "basis_archive_photos": {
-    // the name of your query set
-    "mdsource": {
-      // source APIs configuration, providing an axios parameter array
+  "basis_archive_photos": { // the name of your query set
+    "mdsource": { // source APIs configuration, providing an axios parameter array
       "baseurl": "http://host.docker.internal/resources/api/v1/search?",
       "parameters": {
         "field[]": [
@@ -39,14 +40,14 @@ Commands:
         ],
         "filter[]": "ctrlnum:\"AT-OeAW-BA-3-27-P-*\"",
         "limit": 100
-        // it's pagesize - the pageing parameter is assumed to be "page"
+        // the pagesize - the pageing parameter (wich is set dynamically based on  
+        // rescountpath) is assumed to be "page"
       },
-      "rescountpath": "resultCount",
-      "recsetpath": "records",
+      "rescountpath": "resultCount", // JSON path in the APIs response where the sets result count can be found
+      "recsetpath": "records", // JSON path in the APIs response where the Array of records is returned
       "identifierpath": "id"
     },
-    "imgsource": [
-      //multiple image APIs descended through, untill one of them returns a valid jpeg
+    "imgsource": [ //multiple image APIs descended through, until one of them returns a valid jpeg
       {
         "baseurl": "https://opacbasis.acdh.oeaw.ac.at/wwwopac.ashx?",
         "parameters": {
@@ -57,12 +58,10 @@ Commands:
           "height": 500,
           "value": "${rawData['is_hierarchy_id']}.tif"
         },
-        "expectedtype": "image/jpeg"
-        // the expected return MIME-type, as of now only jpeg is possible
+        "expectedtype": "image/jpeg" // the expected return MIME-type, as of now only jpeg is possible
       }
     ],
-    "target": "/opt/thumbnails"
-    // the target directory where downloaded imagery is to be saved
+    "target": "/opt/thumbnails" // the target directory where downloaded imagery is to be saved
   }
 }
 ```
@@ -74,8 +73,11 @@ Commands:
 # transpile ts to js
 yarn run build
 
+# include dependency folder in dist
+yarn run postbuild
+
 # start bin/index.ts
-yarn run bin
+yarn run bin <command>
 
 # run tests
 yarn run test
