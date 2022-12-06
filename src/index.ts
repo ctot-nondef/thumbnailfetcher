@@ -27,7 +27,7 @@ export class Main {
     const misslist = [];
     let i = setlist.length - 1;
     while (i > -1) {
-      const identifier = this.getDescendantProp(setlist[i], setdef.mdsource.identifierpath);
+      const identifier = this.interpolateTemplateString(setlist[i], setdef.mdsource.identifierpath);
       if ( !this.checkImage(setdef.target, identifier )) {
         misslist.push(identifier);
       }
@@ -67,7 +67,8 @@ export class Main {
   private fetchPages = async (mdsource: IMdsource): Promise<Array<Record<any, any>>> => {
     const initial = await axios.get(mdsource.baseurl, { params: mdsource.parameters});
     const resultSet: Array<Record<any, any>> = [];
-    let i: number = Math.floor( this.getDescendantProp(initial.data, mdsource.rescountpath) / mdsource.parameters.limit);
+    let i: number = Math.floor( this.interpolateTemplateString(initial.data, mdsource.rescountpath) / mdsource.parameters.limit);
+    console.log(initial.data, mdsource.rescountpath,  this.interpolateTemplateString(initial.data, mdsource.rescountpath) );
     while ( i > 0) {
       const page = await axios.get(mdsource.baseurl, { params: { ...mdsource.parameters, page: i } });
       console.log(`${i} pages left.`);
@@ -87,7 +88,7 @@ export class Main {
     const fetched = [];
     let i = setlist.length - 1;
     while (i > -1) {
-      const identifier = this.getDescendantProp(setlist[i], setdef.mdsource.identifierpath);
+      const identifier = this.interpolateTemplateString(setlist[i], setdef.mdsource.identifierpath);
       if ( !this.checkImage(setdef.target, identifier )) {
         let s = setdef.imgsource.length - 1;
         while (s > -1) {
@@ -167,14 +168,7 @@ export class Main {
     return filelist;
   }
 
-  private getDescendantProp = (obj: Record<any, any>, desc: string): any => {
-    const arr = desc.split(".");
-    // tslint:disable-next-line:no-conditional-assignment no-empty
-    while (arr.length && (obj = obj[arr.shift()])) {}
-    return obj;
-  }
-
-  private interpolateTemplateString = (params: Record<any, any>, s: string): string => {
+  private interpolateTemplateString = (params: Record<any, any>, s: string): any => {
     const names = Object.keys(params);
     const vals = Object.values(params);
     return new Function(...names, `return \`${s}\`;`)(...vals);

@@ -43,9 +43,9 @@ Configuration can be either a path to a `json` file or a URL returning a json fo
         // the pagesize - the pageing parameter (wich is set dynamically based on  
         // rescountpath) is assumed to be "page"
       },
-      "rescountpath": "resultCount", // JSON path in the APIs response where the sets result count can be found
-      "recsetpath": "records", // JSON path in the APIs response where the Array of records is returned
-      "identifierpath": "id"
+      "rescountpath": "${resultCount}", // JSON path in the APIs response where the sets result count can be found
+      "recsetpath": "${records}", // JSON path in the APIs response where the Array of records is returned
+      "identifierpath": "${id}" // JSON path *within* one Item of the result list to indicate the thumbnails identifier 
     },
     "imgsource": [ //multiple image APIs descended through, until one of them returns a valid jpeg
       {
