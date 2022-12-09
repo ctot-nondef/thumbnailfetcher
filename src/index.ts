@@ -17,7 +17,7 @@ export class Main {
   }
 
   /**
-   * checks setlist agains files in target folder and outputs an array of missing ones
+   * checks setlist against files in target folder and outputs an array of missing ones
    * @param set
    * @param configpath
    */
@@ -27,7 +27,7 @@ export class Main {
     const misslist = [];
     let i = setlist.length - 1;
     while (i > -1) {
-      const identifier = this.interpolateTemplateString(setlist[i], setdef.mdsource.identifierpath);
+      const identifier = this.getDescendantProp(setlist[i], setdef.mdsource.identifierpath);
       if ( !this.checkImage(setdef.target, identifier )) {
         misslist.push(identifier);
       }
@@ -67,13 +67,15 @@ export class Main {
   private fetchPages = async (mdsource: IMdsource): Promise<Array<Record<any, any>>> => {
     const initial = await axios.get(mdsource.baseurl, { params: mdsource.parameters});
     const resultSet: Array<Record<any, any>> = [];
-    let i: number = Math.floor( this.interpolateTemplateString(this.cleanObjectKeys(initial.data), mdsource.rescountpath) / mdsource.parameters.limit);
+    let i: number = Math.floor( this.getDescendantProp(this.cleanObjectKeys(initial.data), mdsource.rescountpath) / mdsource.parameters.limit);
     while ( i > 0) {
       const page = await axios.get(mdsource.baseurl, { params: { ...mdsource.parameters, page: i } });
+      const pagedata = this.getDescendantProp(this.cleanObjectKeys(page.data), mdsource.recsetpath);
       console.log(`${i} pages left.`);
-      resultSet.push(...page.data.records);
+      resultSet.push(...pagedata);
       i--;
     }
+
     return(resultSet);
   }
 
@@ -87,7 +89,7 @@ export class Main {
     const fetched = [];
     let i = setlist.length - 1;
     while (i > -1) {
-      const identifier = this.interpolateTemplateString(setlist[i], setdef.mdsource.identifierpath);
+      const identifier = this.getDescendantProp(setlist[i], setdef.mdsource.identifierpath);
       if ( !this.checkImage(setdef.target, identifier )) {
         let s = setdef.imgsource.length - 1;
         while (s > -1) {
@@ -173,10 +175,16 @@ export class Main {
     return new Function(...names, `return \`${s}\`;`)(...vals);
   }
 
+  private getDescendantProp = (obj: Record<any, any>, desc: string): any => {
+    return desc.replace(/\[([^\[\]]*)\]/g, ".$1.")
+        .split(".")
+        .reduce((prev, cur) => prev && prev[cur], obj);
+  }
+
   private cleanObjectKeys = (obj: Record<any, any>): Record<any, any> => {
     const res = {};
     for (const key of Object.keys(obj)) {
-      if (typeof obj[key] === "object") {
+      if (typeof obj[key] === "object" && !Array.isArray(obj[key])) {
         res[key.replace(/[|&;$%@."<>()+,/\\:#]/g, "")] = this.cleanObjectKeys(obj[key]);
       } else { res[key.replace(/[|&;$%@."<>()+,/\\:#]/g, "")] = obj[key]; }
     }
