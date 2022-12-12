@@ -54,12 +54,16 @@ export class Main {
         const res = await axios.get(configpath, { headers: { Accept: "application/json" } });
         if ( res.data[set] ) {
           setdef = res.data[set];
+          console.log(`set definition "${set}" fetched from URL`);
         }
       } catch (err) {
         console.log(`"${err.input}" was neither a valid set reference nor a valid URL!`);
         throw err;
       }
-    } else { setdef = sources[set]; }
+    } else {
+      setdef = sources[set];
+      console.log(`set definition "${set}" parsed from JSON-file`);
+    }
     return setdef;
   }
 

@@ -10,7 +10,7 @@ WORKDIR /var/www/
 RUN npm install
 RUN npm run build
 
-CMD ["node"]
+CMD ["bash"]
 
 
 
