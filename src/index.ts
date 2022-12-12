@@ -72,6 +72,7 @@ export class Main {
    * @param mdsource
    */
   private fetchPages = async (mdsource: IMdsource): Promise<Array<Record<any, any>>> => {
+    console.log(`fetching metadata from ${mdsource.baseurl}.`);
     const initial = await axios.get(mdsource.baseurl, { params: mdsource.parameters});
     const resultSet: Array<Record<any, any>> = [];
     let i: number = Math.floor( this.getDescendantProp(this.cleanObjectKeys(initial.data), mdsource.rescountpath) / mdsource.parameters.limit);
@@ -82,7 +83,6 @@ export class Main {
       resultSet.push(...pagedata);
       i--;
     }
-
     return(resultSet);
   }
 
@@ -93,6 +93,7 @@ export class Main {
    * @param setlist
    */
   private fetchImages = async (setdef: ISetDef, setlist: Array<Record<any, any>>): Promise<string[]> => {
+    console.log(`fetching images`);
     const fetched = [];
     let i = setlist.length - 1;
     while (i > -1) {
