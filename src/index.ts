@@ -51,7 +51,10 @@ export class Main {
     }
     if (!sources[set]) {
       try {
-        setdef = await axios.get(set, { headers: { Accept: "application/json" } });
+        const res = await axios.get(configpath, { headers: { Accept: "application/json" } });
+        if ( res.data[set] ) {
+          setdef = res.data[set];
+        }
       } catch (err) {
         console.log(`"${err.input}" was neither a valid set reference nor a valid URL!`);
         throw err;
