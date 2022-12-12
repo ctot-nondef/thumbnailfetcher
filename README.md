@@ -43,9 +43,9 @@ Configuration can be either a path to a `json` file or a URL returning a json fo
         // the pagesize - the pageing parameter (wich is set dynamically based on  
         // rescountpath) is assumed to be "page"
       },
-      "rescountpath": "${resultCount}", // JSON path in the APIs response where the sets result count can be found
-      "recsetpath": "${records}", // JSON path in the APIs response where the Array of records is returned
-      "identifierpath": "${id}" // JSON path *within* one Item of the result list to indicate the thumbnails identifier 
+      "rescountpath": "resultCount", // JSON path in the APIs response where the sets result count can be found
+      "recsetpath": "records", // JSON path in the APIs response where the Array of records is returned
+      "identifierpath": "id" // JSON path *within* one Item of the result list to indicate the thumbnails identifier 
     },
     "imgsource": [ //multiple image APIs descended through, until one of them returns a valid jpeg
       {
@@ -56,7 +56,8 @@ Configuration can be either a path to a `json` file or a URL returning a json fo
           "imageformat": "jpg",
           "width": 500,
           "height": 500,
-          "value": "${rawData['is_hierarchy_id']}.tif"
+          "value": "${rawData['is_hierarchy_id']}.tif" //parameters can be parsed with js template syntax, properties are 
+                                                       //referring to the current item processed form the array in recsetpath 
         },
         "expectedtype": "image/jpeg" // the expected return MIME-type, as of now only jpeg is possible
       }
