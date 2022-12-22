@@ -1,3 +1,6 @@
+![Test & Deploy](https://github.com/ctot-nondef/thumbnailfetcher/workflows/build.yml/badge.svg)
+
+
 # ThumbnailFetcher
 
 command line tool to fetch thumbnail images based on an APIs output
