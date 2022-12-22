@@ -1,4 +1,4 @@
-![Test & Deploy](https://github.com/ctot-nondef/thumbnailfetcher/workflows/build.yml/badge.svg)
+![Test & Deploy](https://github.com/ctot-nondef/thumbnailfetcher/actions/workflows/build.yml/badge.svg)
 
 
 # ThumbnailFetcher
