@@ -38,8 +38,9 @@ export class Main {
 
   /**
    * fetches a queryset definition either as defined in the config files
-   * @param set
-   * @param configpath
+   * returns undefined when setdef can be retrieved
+   * @param {string} set - The Name of the set
+   * @param {string} configpath - A path or URL to the set definition
    */
   private getSetDef = async (set: string, configpath: string): Promise<ISetDef> => {
     let setdef: ISetDef;
@@ -58,7 +59,6 @@ export class Main {
         }
       } catch (err) {
         console.log(`"${err.input}" was neither a valid set reference nor a valid URL!`);
-        throw err;
       }
     } else {
       setdef = sources[set];
