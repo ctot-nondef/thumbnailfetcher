@@ -68,8 +68,8 @@ export class Main {
   }
 
   /**
-   * gets setlist from solr
-   * @param mdsource
+   * gets setlist from defined mdsource
+   * @param {IMdsource} mdsource - mdsource object
    */
   private fetchPages = async (mdsource: IMdsource): Promise<Array<Record<any, any>>> => {
     console.log(`fetching metadata from ${mdsource.baseurl}.`);
