@@ -23,13 +23,13 @@ describe("main", () => {
   });
   describe("getDescendantProp", () => {
     context("when a valid object and path are passed", () => {
-      it("should return the requested value", async () => {
-        expect(await main.getDescendantProp({ test: { test2: [0, 1 , 2] }}, "test.test2[0]")).to.equal(0);
+      it("should return the requested value", () => {
+        expect(main.getDescendantProp({ test: { test2: [0, 1 , 2] }}, "test.test2[0]")).to.equal(0);
       });
     });
     context("when an unavailable path is passed", () => {
-      it("should return the requested value", async () => {
-        expect(await main.getDescendantProp({ test: {  }}, "test.test2[0]")).to.be.undefined;
+      it("should return the requested value", () => {
+        expect(main.getDescendantProp({ test: {  }}, "test.test2[0]")).to.be.undefined;
       });
     });
   });
