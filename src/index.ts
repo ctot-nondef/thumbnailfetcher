@@ -160,8 +160,10 @@ export class Main {
         return true;
       }
     } catch (err) {
+      console.log(err);
       return false;
     }
+    return false;
   }
 
   /**

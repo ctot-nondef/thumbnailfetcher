@@ -33,4 +33,16 @@ describe("main", () => {
       });
     });
   });
+  describe("checkImage", () => {
+    context("when a valid path and image ID are passed", () => {
+      it("should return true", () => {
+        expect(main.checkImage("./test/data", "100110003590")).to.equal(true);
+      });
+    });
+    context("when an valid path and/or image ID are passed", () => {
+      it("should return false", () => {
+        expect(main.checkImage("bla", "blabla")).to.equal(false);
+      });
+    });
+  });
 });
