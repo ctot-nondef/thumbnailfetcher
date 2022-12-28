@@ -15,12 +15,20 @@ describe("main", () => {
       });
     });
     context("when a valid URL and setname is entered", () => {
-      it("should return undefined", async () => {
+      it("should return a object", async () => {
         const setdef = await main.getSetDef("basis_archive_photos", "https://raw.githubusercontent.com/acdh-oeaw/AkSearchWeb/main/local/config/thumbnailfetcher/basis_archive.json");
         expect(setdef).to.be.a("object");
       });
     });
   });
+  /*describe("fetchPages", () => {
+    context("when a valid setdefinition is provided", () => {
+      it("should return an array of identifiers", async () => {
+        let setDef = await main.getSetDef("basis_archive_photos", "https://raw.githubusercontent.com/acdh-oeaw/AkSearchWeb/main/local/config/thumbnailfetcher/basis_archive.json");
+        expect(Array.isArray(await main.fetchPages(setDef.mdsource))).to.equal(true);
+      }).timeout(5000);
+    });
+  });*/
   describe("getDescendantProp", () => {
     context("when a valid object and path are passed", () => {
       it("should return the requested value", () => {
@@ -42,6 +50,18 @@ describe("main", () => {
     context("when an valid path and/or image ID are passed", () => {
       it("should return false", () => {
         expect(main.checkImage("bla", "blabla")).to.equal(false);
+      });
+    });
+  });
+  describe("getFileList", () => {
+    context("when a valid path is passed", () => {
+      it("should return an array of filenames", () => {
+        expect(main.getFileList("./test/data")[0]).to.equal("100110003590.jpg");
+      });
+    });
+    context("when an invalid path is passed", () => {
+      it("should return an empty array", () => {
+        expect(main.getFileList("./bla").length).to.equal(0);
       });
     });
   });

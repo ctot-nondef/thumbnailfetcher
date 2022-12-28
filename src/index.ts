@@ -175,7 +175,7 @@ export class Main {
     try {
       filelist.push(...fs.readdirSync(path));
     } catch (err) {
-      console.log(err);
+      console.log(err.code);
     }
     return filelist;
   }
