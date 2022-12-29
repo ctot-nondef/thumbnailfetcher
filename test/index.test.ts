@@ -21,14 +21,27 @@ describe("main", () => {
       });
     });
   });
-  /*describe("fetchPages", () => {
+  describe("fetchPages", () => {
     context("when a valid setdefinition is provided", () => {
       it("should return an array of identifiers", async () => {
         let setDef = await main.getSetDef("basis_archive_photos", "https://raw.githubusercontent.com/acdh-oeaw/AkSearchWeb/main/local/config/thumbnailfetcher/basis_archive.json");
-        expect(Array.isArray(await main.fetchPages(setDef.mdsource))).to.equal(true);
+        expect(Array.isArray(await main.fetchPages( {
+              baseurl: "https://www.oeaw.ac.at/resources/api/v1/search?",
+              parameters: {
+                "field[]": [
+                  "id",
+                  "rawData",
+                ],
+                "filter[]": "ctrlnum:\"AT-OeAW-BA-3-27-T*\"",
+                "limit": 100,
+              },
+              rescountpath: "resultCount",
+              recsetpath: "records",
+              identifierpath: "id",
+            }))).to.equal(true);
       }).timeout(5000);
     });
-  });*/
+  });
   describe("getDescendantProp", () => {
     context("when a valid object and path are passed", () => {
       it("should return the requested value", () => {
