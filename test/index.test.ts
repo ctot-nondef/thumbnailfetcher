@@ -38,7 +38,7 @@ describe("main", () => {
               recsetpath: "records",
               identifierpath: "id",
             }))).to.equal(true);
-      }).timeout(5000);
+      }).timeout(10000);
     });
   });
   describe("fetchImages", () => {
