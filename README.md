@@ -1,5 +1,4 @@
-![Test & Deploy](https://github.com/ctot-nondef/thumbnailfetcher/actions/workflows/build.yml/badge.svg)
-
+![Test & Deploy](https://github.com/ctot-nondef/thumbnailfetcher/actions/workflows/build.yml/badge.svg) ![](https://img.shields.io/badge/Coverage-90%25-83A603.svg?prefix=$coverage$)
 
 # ThumbnailFetcher
 

@@ -30,6 +30,8 @@ jobs:
         run: npm install
       - name: Run All Node.js Tests
         run: npm run test
+      - name: Create Badge
+        run: npm run coverage:badge
   dockerhub:
     runs-on: ubuntu-latest
     steps:
