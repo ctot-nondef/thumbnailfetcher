@@ -75,7 +75,7 @@ export class Main {
     console.log(`fetching metadata from ${mdsource.baseurl}.`);
     const initial = await axios.get(mdsource.baseurl, { params: mdsource.parameters});
     const resultSet: Array<Record<any, any>> = [];
-    let i: number = Math.floor( this.getDescendantProp(this.cleanObjectKeys(initial.data), mdsource.rescountpath) / mdsource.parameters.limit);
+    let i: number = Math.floor( this.getDescendantProp(this.cleanObjectKeys(initial.data), mdsource.rescountpath) / mdsource.parameters.limit) + 1;
     console.log(`Query matches ${this.getDescendantProp(this.cleanObjectKeys(initial.data), mdsource.rescountpath) } resources.`);
     while ( i > 0) {
       const page = await axios.get(mdsource.baseurl, { params: { ...mdsource.parameters, page: i } });
