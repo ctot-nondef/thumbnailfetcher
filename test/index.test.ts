@@ -24,7 +24,6 @@ describe("main", () => {
   describe("fetchPages", () => {
     context("when a valid setdefinition is provided", () => {
       it("should return an array of identifiers", async () => {
-        let setDef = await main.getSetDef("basis_archive_photos", "https://raw.githubusercontent.com/acdh-oeaw/AkSearchWeb/main/local/config/thumbnailfetcher/basis_archive.json");
         expect(Array.isArray(await main.fetchPages( {
               baseurl: "https://www.oeaw.ac.at/resources/api/v1/search?",
               parameters: {
@@ -39,6 +38,80 @@ describe("main", () => {
               recsetpath: "records",
               identifierpath: "id",
             }))).to.equal(true);
+      }).timeout(5000);
+    });
+  });
+  describe("fetchImages", () => {
+    context("when a valid setdefinition is provided", () => {
+      it("should return an array of identifiers", async () => {
+        expect(Array.isArray(await main.fetchImages({
+          mdsource: {
+            baseurl: "https://www.oeaw.ac.at/resources/api/v1/search?",
+            parameters: {
+              "field[]": [
+                "id",
+                "rawData",
+              ],
+              "filter[]": "ctrlnum:\"AT-OeAW-BA-3-27-P-*\"",
+              "limit": 100,
+            },
+            rescountpath: "resultCount",
+            recsetpath: "records",
+            identifierpath: "id",
+          },
+          imgsource: [
+            {
+              baseurl: "https://opacbasis.acdh.oeaw.ac.at/wwwopac.ashx?",
+              parameters: {
+                command: "getcontent",
+                server: "images",
+                imageformat: "jpg",
+                width: 500,
+                height: 500,
+                value: "${id}.tif",
+              },
+              expectedtype: "image/jpeg",
+            },
+          ],
+          target: "./test/data/",
+        }, [{id: "100110003590"}, { id: "100110003591"}, { id: "AT-OeAW-BA-3-27-P-2713"}]))).to.equal(true);
+      }).timeout(5000);
+    });
+  });
+  describe("fetchImages", () => {
+    context("when a valid setdefinition is provided", () => {
+      it("should return an array of identifiers", async () => {
+        expect(Array.isArray(await main.fetchImages({
+          mdsource: {
+            baseurl: "https://www.oeaw.ac.at/resources/api/v1/search?",
+            parameters: {
+              "field[]": [
+                "id",
+                "rawData",
+              ],
+              "filter[]": "ctrlnum:\"AT-OeAW-BA-3-27-P-*\"",
+              "limit": 100,
+            },
+            rescountpath: "resultCount",
+            recsetpath: "records",
+            identifierpath: "id",
+          },
+          imgsource: [
+            {
+              baseurl: "https://opacbasis.acdh.oeaw.ac.at/wwwopac.ashx?",
+              parameters: {
+                command: "getcontent",
+                server: "images",
+                imageformat: "jpg",
+                width: 500,
+                height: 500,
+                value: "${id}.tif",
+              },
+              expectedtype: "image/jpeg",
+            },
+          ],
+          target: "./test/data/",
+        }, [{id: "100110003590"}, { id: "100110003591"}, { id: "AT-OeAW-BA-3-27-P-2713"}]))).to.equal(true);
       }).timeout(5000);
     });
   });
