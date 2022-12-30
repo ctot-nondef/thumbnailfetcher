@@ -20,6 +20,12 @@ describe("main", () => {
         expect(setdef).to.be.a("object");
       });
     });
+    context("when a valid path and setname is entered", () => {
+      it("should return a object", async () => {
+        const setdef = await main.getSetDef("test_set", "./test/data/config.json");
+        expect(setdef).to.be.a("object");
+      });
+    });
   });
   describe("fetchPages", () => {
     context("when a valid setdefinition is provided", () => {
@@ -75,6 +81,22 @@ describe("main", () => {
           ],
           target: "./test/data/",
         }, [{id: "100110003590"}, { id: "100110003591"}, { id: "AT-OeAW-BA-3-27-P-2713"}]))).to.equal(true);
+      }).timeout(10000);
+    });
+  });
+  describe("check", () => {
+    context("when a valid setdefinition and setname are provided", () => {
+      it("should return an array of identifiers", async () => {
+        const misslist = await main.check("test_set", "./test/data/config.json");
+        expect(misslist.length).to.equal(1);
+      }).timeout(10000);
+    });
+  });
+  describe("fetch", () => {
+    context("when a valid setdefinition and setname are provided", () => {
+      it("should return an array of identifiers", async () => {
+        const misslist = await main.fetch("test_set", "./test/data/config.json");
+        expect(misslist.length).to.equal(1);
       }).timeout(10000);
     });
   });

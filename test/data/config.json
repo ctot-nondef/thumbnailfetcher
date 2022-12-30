@@ -1,0 +1,33 @@
+{
+  "test_set": {
+    "mdsource": {
+      "baseurl": "https://www.oeaw.ac.at/resources/api/v1/search?",
+      "parameters": {
+        "field[]": [
+          "id",
+          "rawData"
+        ],
+        "filter[]": "ctrlnum:\"AT-OeAW-BA-3-27-P-2901\"",
+        "limit": 100
+      },
+      "rescountpath": "resultCount",
+      "recsetpath": "records",
+      "identifierpath": "id"
+    },
+    "imgsource": [
+      {
+        "baseurl": "https://opacbasis.acdh.oeaw.ac.at/wwwopac.ashx?",
+        "parameters": {
+          "command": "getcontent",
+          "server": "images",
+          "imageformat": "jpg",
+          "width": 500,
+          "height": 500,
+          "value": "${rawData['is_hierarchy_id']}.tif"
+        },
+        "expectedtype": "image/jpeg"
+      }
+    ],
+    "target": "./test/data/"
+  }
+}
