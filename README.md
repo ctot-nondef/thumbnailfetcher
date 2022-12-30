@@ -1,4 +1,4 @@
-![Test & Deploy](https://github.com/ctot-nondef/thumbnailfetcher/actions/workflows/build.yml/badge.svg) ![](https://img.shields.io/badge/Coverage-90%25-83A603.svg?prefix=$coverage$)
+![Test & Deploy](https://github.com/ctot-nondef/thumbnailfetcher/actions/workflows/build.yml/badge.svg) ![](https://img.shields.io/badge/Coverage-95%25-83A603.svg?prefix=$coverage$)
 
 # ThumbnailFetcher
 
@@ -11,6 +11,7 @@ Nodejs 18+
 ## Usage
 
 In the `/dist` folder run the tool starting any command with `node index.js <command>`
+(you'll need to build first running `npm run build`)
 Alternately you can run it through yarn or npm script `npm run bin <command>`
 
 ```
@@ -28,7 +29,7 @@ Commands:
 
 ## Configuration
 
-Configuration can be either a path to a `json` file or a URL returning a json following this template:
+Configuration can be either a path to a `json` file or a URL returning a `json` following this template:
 
 ```json lines
 {
