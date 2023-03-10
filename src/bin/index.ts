@@ -12,6 +12,7 @@ async function run() {
         .description("command line tool to fetch thumbnail images based on API input")
         .version("0.0.1");
     program.command("fetch")
+        //TODO: refactor argument structure
         .description("Fetch thumbnail images for a configured vufind query set")
         .argument("<configpath>", "Location of the configuration")
         .argument("<setname>", "Name of the query set")
@@ -19,6 +20,7 @@ async function run() {
             console.log(await main.fetch(set, configpath));
         });
     program.command("check")
+        //TODO: refactor argument structure
         .description("Check if thumbnails are missing for the specified query set.")
         .argument("<configpath>", "Location of the configuration")
         .argument("<setname>", "Name of the query set")
