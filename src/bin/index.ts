@@ -15,15 +15,27 @@ async function run() {
         .description("Fetch thumbnail images for a configured vufind query set")
         .argument("<configpath>", "Location of the configuration")
         .argument("<setname>", "Name of the query set")
-        .action(async (configpath: string, set: string) => {
-            console.log(await main.fetch(set, configpath));
+        .option("--all", "fetch all sets in the referenced config")
+        .action(async (configpath: string, set: string, options) => {
+            if (!options.all && set) {
+                console.log(await main.fetch(set, configpath));
+                return;
+            } else {
+                console.log(await main.fetch(null, configpath));
+            }
         });
     program.command("check")
         .description("Check if thumbnails are missing for the specified query set.")
         .argument("<configpath>", "Location of the configuration")
         .argument("<setname>", "Name of the query set")
-        .action(async (configpath: string, set: string) => {
-            console.log(await main.check(set, configpath));
+        .option("--all", "fetch all sets in the referenced config")
+        .action(async (configpath: string, set: string, options) => {
+            if (!options.all && set) {
+                console.log(await main.fetch(set, configpath));
+                return;
+            } else {
+                console.log(await main.fetch(null, configpath));
+            }
         });
     program.parse();
 
