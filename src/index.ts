@@ -11,9 +11,16 @@ export class Main {
    * @param configpath
    */
   public fetch = async (set: string, configpath: string): Promise<string[]> => {
-    const setdef: ISetDef = await this.getSetDef(set, configpath);
-    const setlist = await this.fetchPages(setdef.mdsource);
-    return await this.fetchImages(setdef, setlist);
+    const setdefs: ISetDef[] = await this.getSetDef(set, configpath);
+    const reslist = [];
+    for (const setdef of setdefs) {
+      const index = setdefs.indexOf(setdef);
+      console.log(`checking set ${index + 1} of ${setdefs.length}`);
+      const setlist = await this.fetchPages(setdef.mdsource);
+      const res = await this.fetchImages(setdef, setlist);
+      reslist.push(...res);
+    }
+    return reslist;
   }
 
   /**
@@ -22,16 +29,20 @@ export class Main {
    * @param configpath
    */
   public check = async (set: string, configpath: string): Promise<string[]> => {
-    const setdef: ISetDef = await this.getSetDef(set, configpath);
-    const setlist = await this.fetchPages(setdef.mdsource);
+    const setdefs: ISetDef[] = await this.getSetDef(set, configpath);
     const misslist = [];
-    let i = setlist.length - 1;
-    while (i > -1) {
-      const identifier = this.getDescendantProp(setlist[i], setdef.mdsource.identifierpath);
-      if ( !this.checkImage(setdef.target, identifier )) {
-        misslist.push(identifier);
+    for (const setdef of setdefs) {
+      const index = setdefs.indexOf(setdef);
+      console.log(`checking set ${index + 1} of ${setdefs.length}`);
+      const setlist = await this.fetchPages(setdef.mdsource);
+      let i = setlist.length - 1;
+      while (i > -1) {
+        const identifier = this.getDescendantProp(setlist[i], setdef.mdsource.identifierpath);
+        if ( !this.checkImage(setdef.target, identifier )) {
+          misslist.push(identifier);
+        }
+        i--;
       }
-      i--;
     }
     return misslist;
   }
@@ -39,32 +50,38 @@ export class Main {
   /**
    * fetches a queryset definition either as defined in the config files
    * returns undefined when setdef can be retrieved
-   * @param {string} set - The Name of the set
+   * @param {string|null} set - The Name of the set
    * @param {string} configpath - A path or URL to the set definition
+   * @returns an array of set definitions
    */
-  private getSetDef = async (set: string, configpath: string): Promise<ISetDef> => {
-    let setdef: ISetDef;
+  private getSetDef = async (set: string | null, configpath: string): Promise<ISetDef[]> => {
+    const setdefs: ISetDef[] = [];
     let sources = {};
     try {
       sources = JSON.parse(fs.readFileSync(configpath, "utf8"));
     } catch (err) {
-      console.log(`No valid config json found @ ${configpath}`);
-    }
-    if (!sources[set]) {
+      console.log(`No valid config json found @ ${configpath} - attempting to fetch from url`);
       try {
         const res = await axios.get(configpath, { headers: { Accept: "application/json" } });
-        if ( res.data[set] ) {
-          setdef = res.data[set];
-          console.log(`set definition "${set}" fetched from URL`);
-        }
+        sources = res.data;
       } catch (err) {
         console.log(`"${err.input}" was neither a valid set reference nor a valid URL!`);
+        return;
       }
-    } else {
-      setdef = sources[set];
-      console.log(`set definition "${set}" parsed from JSON-file`);
     }
-    return setdef;
+    if (!set && Object.keys(sources).length > 0) {
+      Object.keys(sources).forEach((setname) => {
+        setdefs.push(sources[setname]);
+        console.log(`${Object.keys(sources).length} set definitions parsed from JSON`);
+      });
+    } else if (set && sources[set]) {
+      setdefs.push(sources[set]);
+      console.log(`set definition "${set}" parsed from JSON`);
+    } else {
+      console.log(`set definition "${set}" not found in JSON`);
+      return;
+    }
+    return setdefs;
   }
 
   /**

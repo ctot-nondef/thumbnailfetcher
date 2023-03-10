@@ -17,13 +17,13 @@ describe("main", () => {
     context("when a valid URL and setname is entered", () => {
       it("should return a object", async () => {
         const setdef = await main.getSetDef("basis_archive_photos", "https://raw.githubusercontent.com/acdh-oeaw/AkSearchWeb/main/local/config/thumbnailfetcher/basis_archive.json");
-        expect(setdef).to.be.a("object");
+        expect(setdef).to.be.a("array");
       });
     });
     context("when a valid path and setname is entered", () => {
       it("should return a object", async () => {
         const setdef = await main.getSetDef("test_set", "./test/data/config.json");
-        expect(setdef).to.be.a("object");
+        expect(setdef).to.be.a("array");
       });
     });
   });
