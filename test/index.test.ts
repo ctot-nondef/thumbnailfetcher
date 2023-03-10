@@ -15,9 +15,17 @@ describe("main", () => {
       });
     });
     context("when a valid URL and setname is entered", () => {
-      it("should return a object", async () => {
+      it("should return am array with one setdef", async () => {
         const setdef = await main.getSetDef("basis_archive_photos", "https://raw.githubusercontent.com/acdh-oeaw/AkSearchWeb/main/local/config/thumbnailfetcher/basis_archive.json");
         expect(setdef).to.be.a("array");
+        expect(setdef.length).to.equal(1);
+      });
+    });
+    context("when a valid URL but no setname is entered", () => {
+      it("should return an array of setdefinitions", async () => {
+        const setdef = await main.getSetDef(null, "https://raw.githubusercontent.com/acdh-oeaw/AkSearchWeb/main/local/config/thumbnailfetcher/basis_archive.json");
+        expect(setdef).to.be.a("array");
+        expect(setdef.length).to.equal(2);
       });
     });
     context("when a valid path and setname is entered", () => {
