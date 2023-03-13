@@ -13,28 +13,28 @@ async function run() {
         .version("0.0.1");
     program.command("fetch")
         .description("Fetch thumbnail images for a configured vufind query set")
-        .argument("<configpath>", "Location of the configuration")
-        .argument("<setname>", "Name of the query set")
-        .option("--all", "fetch all sets in the referenced config")
-        .action(async (configpath: string, set: string, options) => {
-            if (!options.all && set) {
-                console.log(await main.fetch(set, configpath));
+        .requiredOption("-p, --path <string>", "Location of the configuration")
+        .option("-s, --set <string>", "Name of the query set")
+        .option("-a, --all", "flag to process all sets available under path")
+        .action(async (options) => {
+            if (!options.all && options.set) {
+                console.log(await main.fetch(options.set, options.path));
                 return;
-            } else {
-                console.log(await main.fetch(null, configpath));
+            } else if (options.all) {
+                console.log(await main.fetch(null, options.path));
             }
         });
     program.command("check")
         .description("Check if thumbnails are missing for the specified query set.")
-        .argument("<configpath>", "Location of the configuration")
-        .argument("<setname>", "Name of the query set")
-        .option("--all", "fetch all sets in the referenced config")
-        .action(async (configpath: string, set: string, options) => {
-            if (!options.all && set) {
-                console.log(await main.fetch(set, configpath));
+        .requiredOption("-p, --path <string>", "Location of the configuration")
+        .option("-s, --set <string>", "Name of the query set")
+        .option("-a, --all", "flag to process all sets available under path")
+        .action(async (options) => {
+            if (!options.all && options.set) {
+                console.log(await main.check(options.set, options.path));
                 return;
-            } else {
-                console.log(await main.fetch(null, configpath));
+            } else if (options.all) {
+                console.log(await main.check(null, options.path));
             }
         });
     program.parse();

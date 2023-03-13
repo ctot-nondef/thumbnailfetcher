@@ -8,7 +8,7 @@
     "postbuild": "cp package*.json dist && cd dist && npm ci --omit=dev",
     "test": "nyc --reporter=lcov mocha --exit --require ts-node/register test/*.ts",
     "coverage:badge": "coverage-badge-creator",
-    "bin": "npm run build && node dist/bin/index.js"
+    "bin": "node dist/bin/index.js"
   },
   "bin": {
     "ts-boilerplate": "dist/bin/index.js"
