@@ -15,16 +15,18 @@ In the `/dist` folder run the tool starting any command with `node index.js <com
 Alternately you can run it through yarn or npm script `npm run bin <command>`
 
 ```
+Usage: thumbnailfetcher [options] [command]
+
+command line tool to fetch thumbnail images based on API input
+
 Options:
-  -V, --version                 output the version number
-  -h, --help                    display help for command
+  -V, --version                           output the version number
+  -h, --help                              display help for command
 
 Commands:
-  fetch <configpath> <setname>  Fetch thumbnail images for a configured vufind
-                                query set
-  check <configpath> <setname>  Check if thumbnails are missing for the
-                                specified query set.
-  help [command]                display help for command
+  fetch [options]                         Fetch thumbnail images for a configured vufind query set
+  check [options] <configpath> <setname>  Check if thumbnails are missing for the specified query set.
+  help [command]                          display help for command
 ```
 
 ## Configuration

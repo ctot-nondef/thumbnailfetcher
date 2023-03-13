@@ -14,18 +14,30 @@ async function run() {
     program.command("fetch")
         //TODO: refactor argument structure
         .description("Fetch thumbnail images for a configured vufind query set")
-        .argument("<configpath>", "Location of the configuration")
-        .argument("<setname>", "Name of the query set")
-        .action(async (configpath: string, set: string) => {
-            console.log(await main.fetch(set, configpath));
+        .requiredOption("-p, --path <string>", "Location of the configuration")
+        .option("-s, --set <string>", "Name of the query set")
+        .option("-a, --all", "flag to process all sets available under path")
+        .action(async (options) => {
+            if (!options.all && options.set) {
+                console.log(await main.fetch(options.set, options.path));
+                return;
+            } else if (options.all) {
+                console.log(await main.fetch(null, options.path));
+            }
         });
     program.command("check")
         //TODO: refactor argument structure
         .description("Check if thumbnails are missing for the specified query set.")
-        .argument("<configpath>", "Location of the configuration")
-        .argument("<setname>", "Name of the query set")
-        .action(async (configpath: string, set: string) => {
-            console.log(await main.check(set, configpath));
+        .requiredOption("-p, --path <string>", "Location of the configuration")
+        .option("-s, --set <string>", "Name of the query set")
+        .option("-a, --all", "flag to process all sets available under path")
+        .action(async (options) => {
+            if (!options.all && options.set) {
+                console.log(await main.check(options.set, options.path));
+                return;
+            } else if (options.all) {
+                console.log(await main.check(null, options.path));
+            }
         });
     program.parse();
 
