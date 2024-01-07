@@ -54,7 +54,7 @@ export class Main {
    * @param {string} configpath - A path or URL to the set definition
    * @returns an array of set definitions
    */
-  private getSetDef = async (set: string | null, configpath: string): Promise<ISetDef[]> => {
+  getSetDef = async (set: string | null, configpath: string): Promise<ISetDef[]> => {
     const setdefs: ISetDef[] = [];
     let sources = {};
     try {
@@ -88,7 +88,7 @@ export class Main {
    * gets setlist from defined mdsource
    * @param {IMdsource} mdsource - mdsource object
    */
-  private fetchPages = async (mdsource: IMdsource): Promise<Array<Record<any, any>>> => {
+  fetchPages = async (mdsource: IMdsource): Promise<Array<Record<any, any>>> => {
     console.log(`fetching metadata from ${mdsource.baseurl}.`);
     const initial = await axios.get(mdsource.baseurl, { params: mdsource.parameters});
     const resultSet: Array<Record<any, any>> = [];
@@ -171,7 +171,7 @@ export class Main {
    * @param path
    * @param id
    */
-  private checkImage = (path: string, id: string): boolean => {
+  checkImage = (path: string, id: string): boolean => {
     try {
       if (fs.existsSync(`${path}/${id}.jpg`) || fs.existsSync(`${path}/${id}.jpeg`)) {
         return true;
@@ -187,7 +187,7 @@ export class Main {
    * compile list of files in target directory, logs error if path not present, always returns an array
    * @param path
    */
-  private getFileList = (path: string): string[] => {
+  getFileList = (path: string): string[] => {
     const filelist: string[] = [];
     try {
       filelist.push(...fs.readdirSync(path));
@@ -203,7 +203,7 @@ export class Main {
     return new Function(...names, `return \`${s}\`;`)(...vals);
   }
 
-  private getDescendantProp = (obj: Record<any, any>, desc: string): any => {
+  getDescendantProp = (obj: Record<any, any>, desc: string): any => {
     return desc.replace(/\[([^\[\]]*)\]/g, ".$1.")
         .split(".")
         .reduce((prev, cur) => prev && prev[cur], obj);
