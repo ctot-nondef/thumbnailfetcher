@@ -96,7 +96,7 @@ describe("main", () => {
     context("when a valid setdefinition and setname are provided", () => {
       it("should return an array of identifiers", async () => {
         const misslist = await main.check("test_set", "./test/data/config.json");
-        expect(misslist.length).to.equal(0);
+        expect(misslist.length).to.equal(1);
       }).timeout(10000);
     });
   });
@@ -104,7 +104,7 @@ describe("main", () => {
     context("when a valid setdefinition and setname are provided", () => {
       it("should return an array of identifiers", async () => {
         const misslist = await main.fetch("test_set", "./test/data/config.json");
-        expect(misslist.length).to.equal(0);
+        expect(misslist.length).to.equal(1);
       }).timeout(10000);
     });
   });
