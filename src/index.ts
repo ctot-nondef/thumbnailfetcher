@@ -110,7 +110,7 @@ export class Main {
    * @param setdef
    * @param setlist
    */
-  private fetchImages = async (setdef: ISetDef, setlist: Array<Record<any, any>>): Promise<string[]> => {
+  fetchImages = async (setdef: ISetDef, setlist: Array<Record<any, any>>): Promise<string[]> => {
     console.log(`fetching images`);
     const fetched = [];
     let i = setlist.length - 1;
