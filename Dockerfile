@@ -1,11 +1,11 @@
-FROM node:18-alpine
+FROM node:22-alpine
 
 COPY . /var/www/
 
 WORKDIR /var/www/
 
-RUN npm ci
-RUN npm run build
+RUN pnpm ci
+RUN pnpm run build
 
 CMD ["bash"]
 
