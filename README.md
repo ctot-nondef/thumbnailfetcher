@@ -77,16 +77,16 @@ Commands:
 
 ```bash
 # transpile ts to js
-yarn run build
+pnpm run build
 
 # include dependency folder in dist
-yarn run postbuild
+pnpm run postbuild
 
 # start bin/index.ts
-yarn run bin <command>
+pnpm run bin <command>
 
 # run tests
-yarn run test
+pnpm run test
 ```
 
 ## License
