@@ -3,6 +3,11 @@
   "version": "0.0.3",
   "description": "command line tool to fetch thumbnail images based on an API input",
   "main": "dist/index.js",
+  "engines": {
+    "node": "22.x",
+    "pnpm": "10.x"
+  },
+  "packageManager": "pnpm@10.10.0",
   "scripts": {
     "build": "tsc",
     "postbuild": "cp package*.json dist && cp pnpm-lock.yaml dist && cd dist && pnpm install --frozen-lockfile --prod",
