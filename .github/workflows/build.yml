@@ -11,9 +11,7 @@ jobs:
     strategy:
       matrix:
         node:
-          - 14
-          - 16
-          - 18
+          - 22
     steps:
       - uses: actions/setup-node@v1
         with:
@@ -27,11 +25,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-v${{ matrix.node }}-
       - name: Install Dependencies
-        run: npm install
+        run: pnpm install
       - name: Run All Node.js Tests
-        run: npm run test
+        run: pnpm run test
       - name: Create Badge
-        run: npm run coverage:badge
+        run: pnpm run coverage:badge
   dockerhub:
     runs-on: ubuntu-latest
     steps:
