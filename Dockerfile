@@ -1,5 +1,7 @@
 FROM node:22-alpine
 
+RUN corepack enable
+
 COPY . /var/www/
 
 WORKDIR /var/www/
